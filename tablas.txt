@@ -1,0 +1,87 @@
+CREATE TABLE historiaclinica (
+    id SERIAL PRIMARY KEY,
+    paciente_id INT,
+    fechainicio DATE,
+    estadopaciente TEXT,
+    notas TEXT,
+    fechaultimaactualizacion DATE,
+    numerohistoriaclinica INT
+);
+
+CREATE TABLE paciente (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100),
+    diagnostico TEXT,
+    cedula TEXT, 
+    telefono TEXT,
+    direccion TEXT,
+    correo TEXT
+);
+
+CREATE TABLE medico (
+    id SERIAL PRIMARY KEY,
+    especialidad VARCHAR(100)
+);
+
+CREATE TABLE consulta (
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL,
+    detalles TEXT,
+    signosVitales TEXT,
+    paciente_id INT,
+    medico_id INT,
+    historia_clinica_id INT,
+    CONSTRAINT fk_consulta_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id),
+    CONSTRAINT fk_consulta_medico FOREIGN KEY (medico_id) REFERENCES medico(id),
+    CONSTRAINT fk_consulta_historia_clinica FOREIGN KEY (historia_clinica_id) REFERENCES historiaclinica(id)
+);
+
+CREATE TABLE cita (
+    id SERIAL PRIMARY KEY,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    paciente_id INT,
+    medico_id INT,
+    CONSTRAINT fk_cita_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id),
+    CONSTRAINT fk_cita_medico FOREIGN KEY (medico_id) REFERENCES medico(id)
+);
+
+CREATE TABLE certificadomedico (
+    id SERIAL PRIMARY KEY,
+    paciente_id INT,
+    medico_id INT,
+    descripcionEnfermedad TEXT,
+    fechaEmision DATE,
+    fechaVencimiento DATE,
+    CONSTRAINT fk_certificado_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id),
+    CONSTRAINT fk_certificado_medico FOREIGN KEY (medico_id) REFERENCES medico(id)
+);
+
+CREATE TABLE recordatorio (
+    id SERIAL PRIMARY KEY,
+    fechaEnvio DATE NOT NULL,
+    mensaje TEXT,
+    cita_id INT,
+    CONSTRAINT fk_recordatorio_cita FOREIGN KEY (cita_id) REFERENCES cita(id)
+);
+
+CREATE TABLE reportehistoriaclinica (
+    id SERIAL PRIMARY KEY,
+    paciente_id INT,
+    CONSTRAINT fk_reporte_paciente FOREIGN KEY (paciente_id) REFERENCES paciente(id)
+);
+
+CREATE TABLE usuario (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    direccion TEXT,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    pass VARCHAR(255) NOT NULL
+);
+
+
+select * from usuario;
